@@ -1,26 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useSelector } from 'react-redux';
+import { RootState } from './store/store';
 
-function App() {
+import SearchBar from './components/SearchBar';
+import WeatherResult from './components/WeatherResult';
+
+const App = () => {
+  const weatherData = useSelector((state: RootState) => state.dataState.data);
+  const error = useSelector((state: RootState) => state.dataState.errMsg);
+  const loading = useSelector((state: RootState) => state.dataState.loading);
+  const alertMsg = useSelector((state: RootState) => state.alertState.message);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <SearchBar error={error} alert={alertMsg} />
+      {loading ? (
+        <h2 className="title is-size-3 has-text-centered my-3 mx-auto">
+          Loading...
+        </h2>
+      ) : (
+        weatherData && <WeatherResult data={weatherData} />
+      )}
     </div>
   );
-}
+};
 
 export default App;
